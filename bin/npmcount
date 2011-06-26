@@ -1,0 +1,63 @@
+#!/usr/bin/env node
+
+var async = require('async'),
+    npm = require('npm'),
+    winston = require('winston').cli(),
+    argv = require('optimist').argv,
+    cliff = require('cliff');
+
+var help = [
+  'npmcount [user1, user2, user3, ...]',
+  'Silly program that counts number of npm packages from one or more users',
+  '',
+  '-t, --truncate  Truncates the output to the specified characters',
+  '-h, --help      Youre staring at it'
+].join('\n');
+
+if (argv.h || argv.help) {
+  return console.log(help);
+}
+
+var packages = {},
+    truncate = parseInt(argv.t || argv.truncate || 40, 10);
+
+function searchUser (user, next) {
+  winston.verbose('Searching packages for ' + user.magenta)
+  npm.commands.search(['=' + user], function (err, userPkgs) {
+    if (err) {
+      winston.error('Error contacting npm');
+      winston.error(err.message);
+      process.exit(-1);
+    }
+    
+    Object.keys(userPkgs).forEach(function (pkg) {
+      name = pkg.toLowerCase();
+      if (!packages[name]) {
+        packages[name] = [
+          name,
+          (userPkgs[pkg].description || 'No description').substr(0, truncate),
+          userPkgs[pkg].maintainers.join(' ')
+        ];
+        
+        if (packages[name][1].length === truncate) {
+          packages[name][1] += '...  '
+        }
+      }
+    });
+    
+    next();
+  });
+}
+
+winston.info('Loading npm');
+npm.load({ outfd: null }, function () {
+  winston.info('Searching npm');
+  async.forEach(argv._, searchUser, function (err) {
+    var rows = [['name', 'description', 'maintainers']];
+    rows = rows.concat(Object.keys(packages).sort().map(function (key) { return packages[key] }));
+    
+    cliff.putRows('data', rows, ['yellow', 'yellow', 'yellow']);
+    winston.info('Done listing all npm packages for: ' + argv._.join(' ').magenta);
+    winston.info('Total packages: ' + (rows.length - 1).toString().magenta);
+  })
+});
