@@ -1,6 +1,6 @@
 {
   "name": "npmcount",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Silly program that counts number of npm packages from one or more users",
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
   "dependencies": {
     "async": "0.1.x",
     "cliff": "0.1.x",
-    "winston": "0.3.x",
+    "winston": "0.5.x",
     "npm": "1.0.x",
     "optimist": "0.2.x"
   },
