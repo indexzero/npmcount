@@ -10,11 +10,9 @@
     "npmcount": "./bin/npmcount"
   },
   "dependencies": {
-    "async": "0.1.x",
     "cliff": "0.1.x",
-    "winston": "0.5.x",
-    "npm": "1.0.x",
-    "optimist": "0.2.x"
+    "flatiron": "0.1.5",
+    "npm": "1.0.x"
   },
   "keywords": [
     "npm",
