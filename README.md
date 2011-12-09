@@ -35,3 +35,4 @@ Silly program that counts number of npm packages from one or more users.
 ```
 
 #### Author: [Charlie Robbins](http://nodejitsu.com)
+#### License: MIT
