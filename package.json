@@ -23,5 +23,5 @@
   ],
   "author": "Charlie Robbins <info@nodejitsu.com>",
   "license": "MIT/X11",
-  "engine": ["node >= 0.2.0"]
+  "engine": ["node >= 0.4.8"]
 }
