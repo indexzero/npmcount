@@ -40,21 +40,14 @@ app.cmd(/[\w\_\-\s\.]{1,}/ig, function () {
     }
 
     var rows = [['name', 'description', 'maintainers', 'github followers']];
-        names = Object.keys(app.packages).sort();
+        names = Object.keys(app.results).sort();
         
-    rows = rows.concat(names.map(function (key) { return app.packages[key] }));
+    rows = rows.concat(names.map(function (key) { return app.results[key] }));
     
     cliff.putRows('data', rows, ['yellow', 'yellow', 'yellow', 'yellow']);
     app.log.info('Done listing all npm packages for: ' + app.argv._.join(' ').magenta);
     app.log.info('Total packages: ' + (rows.length - 1).toString().magenta);
-    app.log.info('Total aggregate followers: ' + names.reduce(function (prev, curr) {
-      var pkg = app.packages[curr].slice(),
-          followers = pkg.pop();
-      
-      return typeof followers === 'number' 
-        ? prev + followers
-        : prev;
-    }, 0).toString().magenta);
+    app.log.info('Total aggregate followers: ' + Object.keys(app.followers).length.toString().magenta);
   });
 });
 
