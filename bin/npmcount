@@ -39,12 +39,22 @@ app.cmd(/[\w\_\-\s\.]{1,}/ig, function () {
       return;
     }
 
-    var rows = [['name', 'description', 'maintainers']];
-    rows = rows.concat(Object.keys(app.packages).sort().map(function (key) { return app.packages[key] }));
+    var rows = [['name', 'description', 'maintainers', 'github followers']];
+        names = Object.keys(app.packages).sort();
+        
+    rows = rows.concat(names.map(function (key) { return app.packages[key] }));
     
-    cliff.putRows('data', rows, ['yellow', 'yellow', 'yellow']);
+    cliff.putRows('data', rows, ['yellow', 'yellow', 'yellow', 'yellow']);
     app.log.info('Done listing all npm packages for: ' + app.argv._.join(' ').magenta);
     app.log.info('Total packages: ' + (rows.length - 1).toString().magenta);
+    app.log.info('Total aggregate followers: ' + names.reduce(function (prev, curr) {
+      var pkg = app.packages[curr].slice(),
+          followers = pkg.pop();
+      
+      return typeof followers === 'number' 
+        ? prev + followers
+        : prev;
+    }, 0).toString().magenta);
   });
 });
 
